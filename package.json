@@ -1,0 +1,22 @@
+{
+  "name": "elastic-react-ssr",
+  "version": "1.0.0",
+  "description": "` create repository elastic-react-ssr [https://github.com/dcwmark] `",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcwmark/elastic-react-ssr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dcwmark/elastic-react-ssr/issues"
+  },
+  "homepage": "https://github.com/dcwmark/elastic-react-ssr#readme",
+  "dependencies": {
+    "elasticsearch": "^16.6.0"
+  }
+}
