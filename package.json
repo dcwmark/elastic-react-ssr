@@ -1,43 +1,45 @@
 {
-  "name": "elastic-react-ssr",
-  "version": "1.0.0",
-  "description": "` create repository elastic-react-ssr [https://github.com/dcwmark] `",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dcwmark/elastic-react-ssr.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dcwmark/elastic-react-ssr/issues"
-  },
-  "homepage": "https://github.com/dcwmark/elastic-react-ssr#readme",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "elasticsearch": "^16.6.0",
-    "express": "^4.17.1",
-    "isomorphic-fetch": "^2.2.1",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2",
-    "serialize-javascript": "^3.0.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/preset-react": "^7.9.1",
-    "babel-loader": "^8.1.0",
-    "html-loader": "^1.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "nodemon": "^2.0.2",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-node-externals": "^1.7.2"
-  }
+    "name": "elastic-react-ssr",
+    "version": "1.0.0",
+    "description": "` create repository elastic-react-ssr [https://github.com/dcwmark] `",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack --mode development -w & nodemon server",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dcwmark/elastic-react-ssr.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dcwmark/elastic-react-ssr/issues"
+    },
+    "homepage": "https://github.com/dcwmark/elastic-react-ssr#readme",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "elasticsearch": "^16.6.0",
+        "express": "^4.17.1",
+        "isomorphic-fetch": "^2.2.1",
+        "prop-types": "^15.7.2",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-router-dom": "^5.1.2",
+        "serialize-javascript": "^3.0.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
+        "@babel/preset-react": "^7.9.1",
+        "babel-loader": "^8.1.0",
+        "html-loader": "^1.0.0",
+        "html-webpack-plugin": "^3.2.0",
+        "nodemon": "^2.0.2",
+        "webpack": "^4.42.0",
+        "webpack-cli": "^3.3.11",
+        "webpack-node-externals": "^1.7.2"
+    }
 }

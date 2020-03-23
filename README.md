@@ -23,5 +23,5 @@ create repository elastic-react-ssr [https://github.com/dcwmark]
 > npm i @babel/core babel-loader @babel/preset-env @babel/preset-react @babel/plugin-proposal-object-rest-spread -D
 > npm i react react-dom react-router-dom prop-types
 > npm i nodemon -D
-> npm i cors express isomorphic-fetch serialize-javascript
+> npm i cors express body-parser isomorphic-fetch serialize-javascript
 ```
