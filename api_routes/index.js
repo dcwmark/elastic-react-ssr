@@ -16,7 +16,7 @@ router.use('/search', searchIndex);
 const apiRoutes = (app) => {
     app.use('/api', bulkIndex);
 
-    // app.use('/search', searchIndex);
+    app.use('/search', searchIndex);
 
     return router;
 };
