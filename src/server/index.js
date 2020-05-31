@@ -2,20 +2,16 @@
 
 import express from "express";
 import cors from "cors";
+import bodyParser from "body-parser";
 
-import { renderToString } from "react-dom/server";
 import React from "react";
+import { renderToString } from "react-dom/server";
 
-import { ELASTIC_SEARCH_HOST, ELASTIC_SEARCH_PORT } from "./constants";
+import { ELASTIC_SEARCH_HOST, ELASTIC_SEARCH_PORT } from "../../constants";
 import elasticsearch from "elasticsearch";
 
+import apiRoutes from "../../api_routes/";
 import App from "../shared/App";
-
-const PORT = process.env.PORT || 5000;
-
-const app = express();
-app.use(cors());
-app.use(express.static('public'));
 
 //=-
 // Elasticsearch Setup 
@@ -23,9 +19,9 @@ app.use(express.static('public'));
 ( () => {
     // instantial an Elasticsearch client
     const esClient = new elasticsearch.Client({
-     hosts: [
-         `${ELASTIC_SEARCH_HOST}${ELASTIC_SEARCH_PORT}`
-     ]
+        hosts: [
+            `${ELASTIC_SEARCH_HOST}${ELASTIC_SEARCH_PORT}`
+        ]
     });
     
     //ping esClient
@@ -39,27 +35,62 @@ app.use(express.static('public'));
     //elasticsearch is ok
 })();
 
+//=-
+// Express Setup 
+//=-
+( () => {
+    const PORT = process.env.PORT || 5000;
+    const app = express();
 
-app.get("*", (req, res, next) => {
-    const markup = renderToString(
-      <App />
-    )
-  
-    res.send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-            <title>SSR with RR</title>
-        </head>
-  
-        <body>
-            <div id="app">${markup}</div>
-            <script src="/bundle.js" defer></script>
-        </body>
-      </html>
-    `)
-});
+    app.use(express.static('public'));
+    
+    // enable CORS
+    app.use(cors());
 
-app.listen(PORT, () => {
-    console.log(`Server listening on port: ${PORT}`);
-});
+    /**
+     * May not need these when 'using' cors()
+        app.use( (req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header(
+                'Access-Control-Allow-Methods',
+                'PUT, GET, POST, DELETE, OPTIONS'
+            );
+            res.header(
+                "Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type, Accept"
+            );
+            next();
+        });
+     *
+    **/
+    
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+
+    /* api routes registrar */
+    // apiRoutes(app);
+    app.use('/api', apiRoutes);
+    /* -------------------- */
+
+    // app.get("*", (req, res, next) => {
+    //     const markup = renderToString(<App />);
+
+    //     res.send(`
+    //         <!DOCTYPE html>
+    //         <html>
+    //             <head>
+    //             <title>Elastic React SSR</title>
+    //         </head>
+        
+    //         <body>
+    //             <div id="app">${markup}</div>
+    //             <script src="/bundle.js" defer></script>
+    //         </body>
+    //         </html>
+    //     `)
+    // });
+
+    app.listen(PORT, () => {
+        console.log(`Server listening on port: ${PORT}`);
+    });
+})();

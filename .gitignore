@@ -3,3 +3,5 @@ node_modules/
 public/
 server.js
 package-lock.json
+logs
+*log

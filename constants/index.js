@@ -1,4 +1,4 @@
-// src/server/costants/index.js
+// costants/index.js
 
 module.exports = {
     ELASTIC_SEARCH_HOST: 'http://localhost',

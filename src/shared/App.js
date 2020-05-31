@@ -4,9 +4,9 @@ import React from 'react';
 
 const App = props => {
     return (
-        <div>
-            Hello Server World
-        </div>
+        <>
+            Elastic React SSR
+        </>
     );
 };
 
