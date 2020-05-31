@@ -1,5 +1,7 @@
 // src/shared/App.js
 
+"use strict";
+
 import React from 'react';
 
 const App = props => {
@@ -10,4 +12,4 @@ const App = props => {
     );
 };
 
-export default App
+export default App;
