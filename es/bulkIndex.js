@@ -11,8 +11,9 @@ const esClient = new elasticsearch.Client({
 });
 
 export const bulkIndex = async (res, index, type, data) => {
+    // console.log(`********** bulkIndex::${JSON.stringify(data)}`);
     await ( async () => {
-        await cleanUp(res, index)
+        await cleanUp(index)
         .then( resolve => {
             console.log(`cleanUp resolve::${JSON.stringify(resolve)}`);
         })
@@ -36,11 +37,12 @@ export const bulkIndex = async (res, index, type, data) => {
     
         bulkBody.push(item);
     });
-    
+
     console.log(`About to bulk insert index::${index} type::${type}`);
     var start = Date.now();
     esClient.bulk({ body: bulkBody })
     .then( response => {
+        // console.log(`bulkIndex response::${JSON.stringify(response)}`);
         let errorCount = 0;
         response.items.map( item => {
             if (item.index && item.index.error) {
@@ -49,24 +51,26 @@ export const bulkIndex = async (res, index, type, data) => {
         });
         var done = Date.now();
         console.log(`Completed in ${done - start} ms`);
-        res.json(`Successfully indexed ${data.length - errorCount} `
-               + `out of ${data.length} items`);
+        res.status(200).json(
+            `Successfully indexed ${data.length - errorCount}
+             out of ${data.length} items`
+        );
     })
     .catch( reject => {
-        res.json(reject);
+        return res.status(400).json(reject);
     });
 };
 
-const cleanUp = (res, index) => {
+const cleanUp = (index) => {
     console.log(`About to delete index::${index}`);
     return new Promise( (resolve, reject) => {
         esClient.indices.delete({
             index: index
         })
         .then( response => {
-            resolve(`
-                elasticsearch ${index} deleted: ${JSON.stringify(response)}
-            `);
+            resolve(
+                `elasticsearch ${index} deleted: ${JSON.stringify(response)}`
+            );
         })
         .catch( error => {
             if (error.status === 404) {
@@ -77,4 +81,3 @@ const cleanUp = (res, index) => {
         });
     })
 };
- 

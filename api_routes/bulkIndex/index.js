@@ -20,13 +20,14 @@ router.get('/:file/:index/:type', (req, res, next) => {
     const fileName = `${file}.json`;
     
     fileToJSON(fileName)
-    .then( result => {
-        console.log('fileToJSON result:: ' + JSON.stringify(result));
-        res.json(bulkIndex(res, index, type, result));
+    .then( response => {
+        // console.log('fileTult:: ' + JSON.stringify(response)
+        // res.send(bulkIndex(res, index, type, response));
+        bulkIndex(res, index, type, response)
+        .then( resolve => res.status(200).send(resolve) )
+        .catch( reject => res.status(400).send(reject) );
     })
-    .catch( reject => {
-        res.json(reject);
-    });
+    .catch( reject =>  res.status(400).send(reject) );
 });
 
 export default router;
