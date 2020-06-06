@@ -21,10 +21,10 @@ router.get('/:file/:index/:type', (req, res, next) => {
 
     fileToJSON(fileName)
     .then( fileData => {
-        const promise = bulkIndex(index, type, fileData)
+        bulkIndex(index, type, fileData)
         // .then( response => res.send(response) )
         // .catch( reject =>  res.send(reject) );
-        promise.then( response => {
+        .then( response => {
             console.log(`********** bulkIndex returned *********`);
             res.send(response)
         })
@@ -36,7 +36,6 @@ router.get('/:file/:index/:type', (req, res, next) => {
     .catch( error => {
         res.send(error);
     })
-
 });
 
 export default router;

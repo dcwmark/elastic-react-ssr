@@ -12,51 +12,37 @@ const esClient = new elasticsearch.Client({
 
 export const bulkIndex = (index, type, data) => {
     cleanUp(index)
-    .then( resolve => {
-        console.log(`***** cleanup returned *****`);
-        return resolve;
-    })
+    // .then( resolve => {
+    //     console.log(`***** cleanup returned:: ${JSON.stringify(resolve)}`);
+    //     return resolve;
+    // })
     .then( () => {
         return new Promise( (resolve, reject ) => {
-            console.log(`***** about to data map *****`);
-            try {
-                let bulkBody = [];
-                
-                data.map( item => {
-                    bulkBody.push({
-                        index: {
-                            _index: index,
-                            _type: type,
-                            _id: item.id
-                        }
-                    });
-                    
-                    bulkBody.push(item);
+            console.log(`***** about to map data:: ${JSON.stringify(data)}`);
+
+            let bulkBody = [];
+            
+            data.map( item => {
+                bulkBody.push({
+                    index: {
+                        _index: index,
+                        _type: type,
+                        _id: item.id
+                    }
                 });
-                resolve(bulkBody);
-            } catch(error) {
-                reject(error);
-            }
-        });
-    })
-    .then( bulkBody => {
-        return new Promise( (resolve, reject) => {
-            console.log(`***** about to esClient bulk *****`);
-            try {
-                const start = Date.now();
-                const results = esClient.bulk({ body: bulkBody });
+                
+                bulkBody.push(item);
+            });
+
+            console.log(`***** about to esClient bulk:: ${JSON.stringify(bulkBody)}`);
+            const start = Date.now();
+            esClient.bulk({ body: bulkBody })
+            .then( results => {
+                console.log(`***** esClint bulk results:: ${JSON.stringify(results)}`);
                 const done = Date.now();
                 console.log(`***** Completed in ${done - start} ms *****`);
-                resolve(results);
-            } catch(error) {
-                reject(error);
-            }
-        });
-    })
-    .then( results => {
-        return new Promise( (resolve, reject) => {
-            console.log(`***** about to count results *****`);
-            try {
+                
+                console.log(`***** about to count results *****`);
                 let errorCount = 0;
                 results.items.map( item => {
                     if (item.index && item.index.error) {
@@ -64,15 +50,19 @@ export const bulkIndex = (index, type, data) => {
                     }
                 });
                 console.log(`***** Successfully indexed ${data.length - errorCount} out of ${data.length} items`);
+
                 resolve({
-                    success: `Successfully indexed ${data.length - errorCount} out of ${data.length} items`
+                    "success": `Successfully indexed ${data.length - errorCount} out of ${data.length} items`
                 });
-            } catch(error) {
+            })
+            .catch( error => {
+                console.log(`***** caught 1:: ${JSON.stringify(error)}`);
                 reject(error);
-            };
+            });
         });
     })
     .catch( error => {
+        console.log(`***** caught 3:: ${JSON.stringify(error)}`);
         Promise.reject(error);
     });
 };
