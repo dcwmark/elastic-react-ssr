@@ -18,16 +18,25 @@ router.get('/:file/:index/:type', (req, res, next) => {
     console.log(`type:: ${type}`);
     
     const fileName = `${file}.json`;
-    
+
     fileToJSON(fileName)
-    .then( response => {
-        // console.log('fileTult:: ' + JSON.stringify(response)
-        // res.send(bulkIndex(res, index, type, response));
-        bulkIndex(res, index, type, response)
-        .then( resolve => res.status(200).send(resolve) )
-        .catch( reject => res.status(400).send(reject) );
+    .then( fileData => {
+        const promise = bulkIndex(index, type, fileData)
+        // .then( response => res.send(response) )
+        // .catch( reject =>  res.send(reject) );
+        promise.then( response => {
+            console.log(`********** bulkIndex returned *********`);
+            res.send(response)
+        })
+        .catch( reject =>  {
+            console.log(`********** bulkIndex rejected *********`);
+            res.send(reject)
+        });
     })
-    .catch( reject =>  res.status(400).send(reject) );
+    .catch( error => {
+        res.send(error);
+    })
+
 });
 
 export default router;

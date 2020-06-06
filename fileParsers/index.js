@@ -4,8 +4,13 @@
 
 import fs from "fs";
 
-export const fileToJSON = async (fileName) => {
-    // console.log(`********** fileToJSON::${fileName}`);
-    const fileRaw = await fs.readFileSync(fileName);
-    return JSON.parse(fileRaw);
+export const fileToJSON = (fileName) => {
+    return new Promise( (resolve, reject) => {
+        try {
+            const fileRaw = fs.readFileSync(fileName);
+            resolve(JSON.parse(fileRaw));
+        } catch(err) {
+            reject(err);
+        }
+    });
 };

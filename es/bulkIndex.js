@@ -10,59 +10,75 @@ const esClient = new elasticsearch.Client({
     log: 'error'
 });
 
-export const bulkIndex = async (res, index, type, data) => {
-    // console.log(`********** bulkIndex::${JSON.stringify(data)}`);
-    await ( async () => {
-        await cleanUp(index)
-        .then( resolve => {
-            console.log(`cleanUp resolve::${JSON.stringify(resolve)}`);
-        })
-        .catch( reject => {
-            console.log(`cleanUp reject::${JSON.stringify(reject)}`);
-            return res.json(reject);
-        });
-    })();
-    
-    console.log(`Setup insert index::${index} type::${type}`);
-    let bulkBody = [];
-    
-    data.map( item => {
-        bulkBody.push({
-          index: {
-            _index: index,
-            _type: type,
-            _id: item.id
-          }
-        });
-    
-        bulkBody.push(item);
-    });
-
-    console.log(`About to bulk insert index::${index} type::${type}`);
-    var start = Date.now();
-    esClient.bulk({ body: bulkBody })
-    .then( response => {
-        // console.log(`bulkIndex response::${JSON.stringify(response)}`);
-        let errorCount = 0;
-        response.items.map( item => {
-            if (item.index && item.index.error) {
-                console.log(++errorCount, item.index.error);
+export const bulkIndex = (index, type, data) => {
+    cleanUp(index)
+    .then( resolve => {
+        console.log(`***** cleanup returned *****`);
+        return resolve;
+    })
+    .then( () => {
+        return new Promise( (resolve, reject ) => {
+            console.log(`***** about to data map *****`);
+            try {
+                let bulkBody = [];
+                
+                data.map( item => {
+                    bulkBody.push({
+                        index: {
+                            _index: index,
+                            _type: type,
+                            _id: item.id
+                        }
+                    });
+                    
+                    bulkBody.push(item);
+                });
+                resolve(bulkBody);
+            } catch(error) {
+                reject(error);
             }
         });
-        var done = Date.now();
-        console.log(`Completed in ${done - start} ms`);
-        res.status(200).json(
-            `Successfully indexed ${data.length - errorCount}
-             out of ${data.length} items`
-        );
     })
-    .catch( reject => {
-        return res.status(400).json(reject);
+    .then( bulkBody => {
+        return new Promise( (resolve, reject) => {
+            console.log(`***** about to esClient bulk *****`);
+            try {
+                const start = Date.now();
+                const results = esClient.bulk({ body: bulkBody });
+                const done = Date.now();
+                console.log(`***** Completed in ${done - start} ms *****`);
+                resolve(results);
+            } catch(error) {
+                reject(error);
+            }
+        });
+    })
+    .then( results => {
+        return new Promise( (resolve, reject) => {
+            console.log(`***** about to count results *****`);
+            try {
+                let errorCount = 0;
+                results.items.map( item => {
+                    if (item.index && item.index.error) {
+                        console.log(++errorCount, item.index.error);
+                    }
+                });
+                console.log(`***** Successfully indexed ${data.length - errorCount} out of ${data.length} items`);
+                resolve({
+                    success: `Successfully indexed ${data.length - errorCount} out of ${data.length} items`
+                });
+            } catch(error) {
+                reject(error);
+            };
+        });
+    })
+    .catch( error => {
+        Promise.reject(error);
     });
 };
 
 const cleanUp = (index) => {
-    console.log(`About to delete index::${index}`);
+    // console.log(`About to delete index::${index}`);
     return new Promise( (resolve, reject) => {
         esClient.indices.delete({
             index: index
@@ -79,5 +95,5 @@ const cleanUp = (index) => {
                 reject(error);
             }
         });
-    })
+    });
 };
