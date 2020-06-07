@@ -22,20 +22,10 @@ router.get('/:file/:index/:type', (req, res, next) => {
     fileToJSON(fileName)
     .then( fileData => {
         bulkIndex(index, type, fileData)
-        // .then( response => res.send(response) )
-        // .catch( reject =>  res.send(reject) );
-        .then( response => {
-            console.log(`********** bulkIndex returned *********`);
-            res.send(response)
-        })
-        .catch( reject =>  {
-            console.log(`********** bulkIndex rejected *********`);
-            res.send(reject)
-        });
+        .then( response => res.send(response) )
+        .catch( reject =>  res.send(reject) );
     })
-    .catch( error => {
-        res.send(error);
-    })
+    .catch( error => res.send(error) );
 });
 
 export default router;
