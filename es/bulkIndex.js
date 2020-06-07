@@ -27,7 +27,7 @@ const bulkInsertIndex = (index, type, data) => {
         // console.log(`***** about to map data:: ${JSON.stringify(data)}`);
 
         let bulkBody = [];
-        
+
         data.map( item => {
             bulkBody.push({
                 index: {
@@ -46,8 +46,8 @@ const bulkInsertIndex = (index, type, data) => {
         .then( results => {
             // console.log(`***** esClint bulk results:: ${JSON.stringify(results)}`);
             const done = Date.now();
-            // console.log(`***** Completed in ${done - start} ms *****`);
-            
+            console.log(`***** BulkIndex Completed in ${done - start} ms *****`);
+
             // console.log(`***** about to count results *****`);
             let errorCount = 0;
             results.items.map( item => {

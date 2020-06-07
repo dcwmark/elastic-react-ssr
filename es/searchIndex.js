@@ -10,28 +10,20 @@ const esClient = new elasticsearch.Client({
     log: 'error'
 });
 
-export const searchIndex = (query) => {
-    let body = {
+export const searchIndex = (index, type, query) => {
+    const body = {
         size: 200,
         from: 0,
         query: {
             match: {
-                name: query['q'],
+                name: query,
             },
         },
     };
     
     return new Promise( (resolve, reject) => {
-        esClient.search({
-            index: 'tutorial',
-            body: body,
-            type: 'cities',
-        })
-        .then( results => {
-            resolve(results.hits.hits);
-        })
-        .catch( error => {
-            reject(error);
-        });
+        esClient.search({ index, body, type })
+        .then( results => resolve(results.hits.hits) )
+        .catch( error => reject(error) );
     });
 };
