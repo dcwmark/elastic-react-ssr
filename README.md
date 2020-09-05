@@ -4,7 +4,7 @@
 create repository elastic-react-ssr [https://github.com/dcwmark]
 `
 
-```
+```zsh
 > ~/Projects/workspace/javascript/elasticsearch/
 > take elastic-react-ssr
 > echo "# elastic-react-ssr" >> README.md
@@ -15,7 +15,7 @@ create repository elastic-react-ssr [https://github.com/dcwmark]
 > git push -u origin master
 ```
 
-```
+```zsh
 > npm init
 > npm install elasticsearch --save
 
@@ -27,15 +27,18 @@ create repository elastic-react-ssr [https://github.com/dcwmark]
 ```
 
 > Was getting
-> ```
+
+> ```js
 > module.exports = {
 >                ^
 > TypeError: Cannot assign to read only property 'exports' of object '#<Object>'
 > ```
+
 > Basically, all `module.exports` was getting this error.
 > 
 > Turned out in .balelrc had `target > node > 10` that seemed to be the cause
-> ```
+
+> ```js
 >     "presets": [[
 >         "@babel/preset-env", {
 >             "targets": {
@@ -44,16 +47,19 @@ create repository elastic-react-ssr [https://github.com/dcwmark]
 >         }
 >     ],
 > ```
+
 > Removing the `target` seemed to have alleviated the problem.
-> 
+>
 > But then, that seems to create another problem:
-> ```
+
+> ```js
 > webpack:///./fileParsers/index.js?:17
 >    var _fileToJSON = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(fileName) {
 >                                                      ^
 > ReferenceError: regeneratorRuntime is not defined
 >    at eval (webpack:///./fileParsers/index.js?:17:
 > ```
+>
 >
 > Adding `@babel/plugin-transform-runtime` corrected the regeneratorRuntime issue but `module.export` issue resurfaced.
 >

@@ -1,4 +1,4 @@
-// api_Routes/index.js
+// api_routes/index.js
 
 "use strict";
 
@@ -11,15 +11,5 @@ const router = express.Router();
 
 router.use('/bulkIndex', bulkIndex);
 router.use('/search', searchIndex);
-
-/*
-const apiRoutes = (app) => {
-    app.use('/api', bulkIndex);
-
-    app.use('/search', searchIndex);
-
-    return router;
-};
-*/
 
 export default router;

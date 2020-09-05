@@ -10,9 +10,11 @@ const clientConfig = {
     publicPath: '/'
   },
   module: {
-    rules: [
-      { test: /\.(js)$/, use: 'babel-loader' },
-    ]
+    rules: [{
+      test: /\.(js)$/,
+      exclude: /node_modules/,
+      use: 'babel-loader'
+    }]
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -31,9 +33,11 @@ const serverConfig = {
     publicPath: '/'
   },
   module: {
-    rules: [
-      { test: /\.(js)$/, use: 'babel-loader' }
-    ]
+    rules: [{
+      test: /\.(js)$/,
+      exclude: /node_modules/,
+      use: 'babel-loader'
+    }]
   },
   plugins: [
     new webpack.DefinePlugin({
